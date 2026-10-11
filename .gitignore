@@ -28,3 +28,10 @@ Cargo.lock
 
 #/target
 #Cargo.lock
+
+# Local maintenance build environments and artifacts
+.venv/
+dist/
+build/
+__pycache__/
+*.pyc

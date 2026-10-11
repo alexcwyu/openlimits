@@ -42,7 +42,7 @@ impl CoinbaseWebsocket {
     pub async fn subscribe_(&mut self, subscription: CoinbaseSubscription) -> Result<()> {
         let (channels, product_ids) = match &subscription {
             CoinbaseSubscription::Level2(product_id) => (
-                vec![Channel::Name(ChannelType::Level2)],
+                vec![Channel::Name(ChannelType::Level2Batch)],
                 vec![product_id.clone()],
             ),
             CoinbaseSubscription::Heartbeat(product_id) => (
@@ -145,7 +145,7 @@ impl ExchangeStream for CoinbaseWebsocket {
 
         let (channel_name, product_ids) = match &subscription.as_slice()[0] {
             CoinbaseSubscription::Level2(product_id) => (
-                ChannelType::Level2,
+                ChannelType::Level2Batch,
                 vec![product_id.clone()],
             ),
             CoinbaseSubscription::Heartbeat(product_id) => (
@@ -191,8 +191,10 @@ impl ExchangeStream for CoinbaseWebsocket {
             } else {
                 Err(OpenLimitsError::UnkownResponse(format!("Response: {:#?}, expected response: {:#?}", response, expected_response)))
             }
+        } else if let Some(Err(error)) = response {
+            Err(error)
         } else {
-            Err(OpenLimitsError::UnkownResponse(format!("No response")))
+            Err(OpenLimitsError::UnkownResponse("Connection closed before subscription acknowledgement".to_owned()))
         }
     }
 }

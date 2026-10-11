@@ -1,10 +1,11 @@
 //! This module provides functionality for communicating with the coinbase API.
 //! # Example
 //! ```no_run
-//! use openlimits::exchange::coinbase::Coinbase;
-//! use openlimits::exchange::coinbase::CoinbaseParameters;
-//! use openlimits::prelude::*;
-//! use openlimits::model::market_pair::*;
+//! use openlimits_coinbase::{Coinbase, CoinbaseParameters};
+//! use openlimits_exchange::{
+//!     traits::{Exchange, ExchangeMarketData},
+//!     model::{OrderBookRequest, currency::Currency, market_pair::MarketPair},
+//! };
 //!
 //! #[tokio::main]
 //! async fn main() {

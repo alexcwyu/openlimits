@@ -1,0 +1,374 @@
+{
+  "repository": "openlimits",
+  "source_commit_before_documentation_commit": "41d02cb277fa500c770afb52f04f73cc86713718",
+  "recorded_on": "2026-10-12",
+  "records": [
+    {
+      "command": [
+        "env",
+        "LIBRARY_PATH=/opt/homebrew/opt/gmp/lib",
+        "cargo",
+        "test",
+        "--workspace",
+        "binance::market",
+        "--",
+        "--test-threads=2"
+      ],
+      "exit_code": 101,
+      "seconds": 11.4,
+      "cwd": "<workspace>/openlimits",
+      "check": "binance-market-schema",
+      "original_log": "openlimits-binance-market-schema.log",
+      "log_sha256": "daef4e8b8c9e667361aa0fa4c41a0b6101459025e2d198baf4bf4bb1c330e482",
+      "outcomes": [
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 53 filtered out; finished in 1.36s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 46.26,
+      "cwd": "<workspace>/openlimits",
+      "check": "build",
+      "original_log": "openlimits-build.log",
+      "log_sha256": "74a3ab25a8b17a5c4caf58e76538d2c41b40297d9b4b883847f1e643df758b61",
+      "outcomes": []
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 19.31,
+      "cwd": "<workspace>/openlimits",
+      "check": "build-gmp",
+      "original_log": "openlimits-build-gmp.log",
+      "log_sha256": "8cc39211896af16784e1e164b5e053552df6f741380b068bce96899b8efe8293",
+      "outcomes": []
+    },
+    {
+      "command": [
+        "env",
+        "LIBRARY_PATH=/opt/homebrew/opt/gmp/lib",
+        "cargo",
+        "test",
+        "--workspace",
+        "coinbase::market",
+        "--",
+        "--test-threads=2"
+      ],
+      "exit_code": 0,
+      "seconds": 19.42,
+      "cwd": "<workspace>/openlimits",
+      "check": "coinbase-public-compatibility",
+      "original_log": "openlimits-coinbase-public-compatibility.log",
+      "log_sha256": "2c37f016756beada645c4bb6e5d37af01a56277f236ac5eb44bcc85ca96a2e11",
+      "outcomes": [
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 53 filtered out; finished in 5.42s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "command": [
+        "env",
+        "LIBRARY_PATH=/opt/homebrew/opt/gmp/lib",
+        "cargo",
+        "test",
+        "--workspace",
+        "coinbase::streams::orderbook",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "seconds": 16.43,
+      "cwd": "<workspace>/openlimits",
+      "check": "coinbase-stream-diagnostics",
+      "original_log": "openlimits-coinbase-stream-diagnostics.log",
+      "log_sha256": "9f6e72f92a5f0d2116373823369e9cdff491cefd17cbabd1c7b1841ecd2a4202",
+      "outcomes": [
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 56 filtered out; finished in 1.39s"
+      ]
+    },
+    {
+      "command": [
+        "env",
+        "LIBRARY_PATH=/opt/homebrew/opt/gmp/lib",
+        "cargo",
+        "test",
+        "--workspace",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 16.96,
+      "cwd": "<workspace>/openlimits",
+      "check": "current-public-existing-suite",
+      "original_log": "openlimits-current-public-existing-suite.log",
+      "log_sha256": "29328e40213af5ecfa28c88797a1ebf90a3e8add8885e8db2c3077fa7c41381c",
+      "outcomes": [
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "command": [
+        "env",
+        "LIBRARY_PATH=/opt/homebrew/opt/gmp/lib",
+        "cargo",
+        "test",
+        "--workspace",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 20.17,
+      "cwd": "<workspace>/openlimits",
+      "check": "final-complete-existing-tests",
+      "original_log": "openlimits-final-complete-existing-tests.log",
+      "log_sha256": "a94d713fdce6482fe86b776b0973bcc5d99780eb435ff836effbd8d233761d1f",
+      "outcomes": [
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "command": [
+        "env",
+        "LIBRARY_PATH=/opt/homebrew/opt/gmp/lib",
+        "cargo",
+        "build",
+        "--workspace",
+        "--all-targets",
+        "--locked"
+      ],
+      "exit_code": 0,
+      "seconds": 0.35,
+      "cwd": "<workspace>/openlimits",
+      "check": "final-public-schema-build",
+      "original_log": "openlimits-final-public-schema-build.log",
+      "log_sha256": "ffaf7568bbee02a81682c32e774a36e958bf3db5bd532c221591374f81447dd2",
+      "outcomes": []
+    },
+    {
+      "command": [
+        "env",
+        "LIBRARY_PATH=/opt/homebrew/opt/gmp/lib",
+        "cargo",
+        "test",
+        "--workspace",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 16.3,
+      "cwd": "<workspace>/openlimits",
+      "check": "final-schema-existing-tests",
+      "original_log": "openlimits-final-schema-existing-tests.log",
+      "log_sha256": "8f2f4ec08cdd3d706e8e2c8a2aabee340cecbf1f78fa33570a07f656fac05228",
+      "outcomes": [
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace"
+      ],
+      "exit_code": 101,
+      "seconds": 8.19,
+      "cwd": "<workspace>/openlimits",
+      "check": "full-workspace-tests",
+      "original_log": "openlimits-full-workspace-tests.log",
+      "log_sha256": "76080b98cf662797c89e0fefdc984cc3062b3b377235e1738cf1e99e00c85fc1",
+      "outcomes": [
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: FAILED. 11 passed; 46 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.42s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 9.12,
+      "cwd": "<workspace>/openlimits",
+      "check": "local-unified-build",
+      "original_log": "openlimits-local-unified-build.log",
+      "log_sha256": "ed0237dcb8791058ec2b4787db1379d42b864f8de679d99f4e57ef9a6205c041",
+      "outcomes": []
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 21.14,
+      "cwd": "<workspace>/openlimits",
+      "check": "local-unified-build-gmp",
+      "original_log": "openlimits-local-unified-build-gmp.log",
+      "log_sha256": "cc7e5ff38de2aad67508568c35a1ef28c1c0f2cf22c6dc0c6fa8b8d2e02f560d",
+      "outcomes": []
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--lib"
+      ],
+      "exit_code": 0,
+      "seconds": 21.31,
+      "cwd": "<workspace>/openlimits",
+      "check": "local-unified-tests-gmp",
+      "original_log": "openlimits-local-unified-tests-gmp.log",
+      "log_sha256": "6f5ce882072941affceadf923452bf1003d7a1b779be0a85ffc99878d40c4ffc",
+      "outcomes": [
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 0.05,
+      "cwd": "<workspace>/openlimits",
+      "check": "local-workspace-build",
+      "original_log": "openlimits-local-workspace-build.log",
+      "log_sha256": "5712334cd5061976401bdfccb5499404d81c227a61febab0bee58b3d2b380eea",
+      "outcomes": []
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--lib"
+      ],
+      "exit_code": 101,
+      "seconds": 4.47,
+      "cwd": "<workspace>/openlimits",
+      "check": "local-workspace-tests",
+      "original_log": "openlimits-local-workspace-tests.log",
+      "log_sha256": "d2f40341303b861ac180911d53ea50c5127e1862112c37202a31a9ce7f01ce1d",
+      "outcomes": []
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 59.69,
+      "cwd": "<workspace>/openlimits",
+      "check": "supported-local-workspace-build",
+      "original_log": "openlimits-supported-local-workspace-build.log",
+      "log_sha256": "1d0aff9e8cff7da1b0ae110de11255588f59521ef47ca599aa32f800fbc67e1c",
+      "outcomes": []
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib"
+      ],
+      "exit_code": 101,
+      "seconds": 2.18,
+      "cwd": "<workspace>/openlimits",
+      "check": "test-lib",
+      "original_log": "openlimits-test-lib.log",
+      "log_sha256": "ac301b2200d466d996127a10439de1c836663e076699fb8a5a1b5ae62e7c0eb2",
+      "outcomes": []
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib"
+      ],
+      "exit_code": 0,
+      "seconds": 0.29,
+      "cwd": "<workspace>/openlimits",
+      "check": "test-lib-gmp",
+      "original_log": "openlimits-test-lib-gmp.log",
+      "log_sha256": "68ce3f6dd6a224e81f59c603e15b482598506b5c11afb92d1c49f1cb4d359df0",
+      "outcomes": [
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    }
+  ],
+  "summary": {
+    "repo": "openlimits",
+    "branch": "feature/ayu_develop",
+    "status": "All supported native targets build. Public market/stream, support-crate and documentation checks pass; external integration prerequisites remain unavailable.",
+    "runtime": "Rust stable1.99.0; GNU GMP installed on macOS ARM",
+    "tests": "The complete existing run reports21 passed and36 failed in the root integration target, plus2 passed support-crate tests and1 passed documentation example.32 failures require absent account credentials;4 Nash public-data cases fail against its sandbox TLS endpoint. No cases are disabled or replaced.",
+    "notes": "Local workspace paths and licensed Nash type-identity patches ensure the checked-out code is exercised. Coinbase removed-size-limit decoding/public batch feed aliases and current typed Binance metadata filters are repaired; the original Coinbase documentation example now imports the actual local crates. Huobi remains an unsupported incomplete upstream crate with its missing sibling dependency, outside the original supported root API."
+  },
+  "note": "Full raw logs are retained in the workspace maintenance evidence, not distributed here. Hashes identify those original logs. A successful build or selected test subset does not imply a full test-suite pass. Commands containing <workspace> describe the original execution environment."
+}

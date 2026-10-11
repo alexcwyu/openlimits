@@ -8,6 +8,8 @@ pub enum ChannelType {
     Heartbeat,
     Ticker,
     Level2,
+    #[serde(rename = "level2_batch", alias = "level2_50")]
+    Level2Batch,
     Matches,
     Full,
     User,

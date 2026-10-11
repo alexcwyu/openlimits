@@ -1,0 +1,43 @@
+[package]
+name = "nash-native-client"
+version = "0.3.0"
+authors = ["Ethan Fast <ethan@nash.io>", "Danilo Guanabara <danilo@nash.io"]
+edition = "2018"
+license = "MIT"
+repository = "https://github.com/nash-io/nash-rust/nash-native-client"
+keywords = ["nash", "api", "graphql", "websockets"]
+description = "native rust client for interacting with nash exchange via websockets"
+
+[lib]
+name = "nash_native_client"
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = ["rust_gmp", "rustcrypto"]
+rustcrypto = ["nash-protocol/rustcrypto"]
+libsecp256k1 = ["nash-protocol/libsecp256k1"]
+rust_gmp = ["nash-protocol/rust_gmp"]
+num_bigint = ["nash-protocol/num_bigint"]
+
+[dependencies]
+rand = "0.8"
+async-recursion = "0.3"
+async-trait = "0.1"
+openlimits-exchange = "0.3.0"
+nash-protocol = { version = "0.3.0", default-features = false }
+tokio = { version = "1.0", features = ["full"] }
+tokio-native-tls = { version = "0.3" }
+tokio-tungstenite = { version = "0.13", features = ["tls"] }
+tracing = "0.1"
+tracing-futures = "0.2"
+serde = "1.0"
+serde_json = "1.0"
+futures = "0.3"
+futures-util = "0.3"
+chrono = "0.4"
+reqwest = {version = "0.11", features=["json"]}
+rust_decimal = "1.14.3"
+tokio-stream = "0.1"
+
+[dev-dependencies]
+dotenv = "0.15"

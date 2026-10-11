@@ -21,10 +21,10 @@ rust_gmp = ["openlimits-nash/rust_gmp"]
 num_bigint = ["openlimits-nash/num_bigint"]
 
 [dependencies]
-openlimits-binance  = "0.3.0"
-openlimits-exchange = "0.3.0"
-openlimits-coinbase = "0.3.0"
-openlimits-nash = "0.3.0"
+openlimits-binance  = { version = "0.3.1-alpha.0", path = "crates/openlimits-binance" }
+openlimits-exchange = { version = "0.3.1-alpha.0", path = "crates/openlimits-exchange" }
+openlimits-coinbase = { version = "0.3.1-alpha.0", path = "crates/openlimits-coinbase" }
+openlimits-nash = { version = "0.3.1-alpha.0", path = "crates/openlimits-nash" }
 # ligen-macro = { path = "../../sensorial/systems/ligen/ligen/macro", optional = true }
 # ligen        = { path = "../../sensorial/systems/ligen/ligen", optional = true }
 # lazy_static = "1.4.0"
@@ -38,3 +38,12 @@ dotenv = "0.15.0"
 [build-dependencies]
 # ligen        = { path = "../../sensorial/systems/ligen/ligen", optional = true }
 # ligen-csharp = { path = "../../sensorial/systems/ligen/generators/ligen-csharp", optional = true }
+
+[workspace]
+resolver = "2"
+members = ["crates/cross-async", "crates/openlimits-messaging", "crates/openlimits-binance", "crates/openlimits-nash", "crates/openlimits-coinbase", "crates/openlimits-exchange"]
+exclude = ["crates/openlimits-huobi"]
+
+[patch.crates-io]
+nash-protocol = { path = "vendor/nash-protocol" }
+nash-native-client = { path = "vendor/nash-native-client" }
