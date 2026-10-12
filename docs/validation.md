@@ -1,5 +1,8 @@
 # openlimits: validation results
 
+
+Current campaign decision: the user explicitly excludes the remaining failing tests from completion requirements. Historical failures below remain failures; they are not relabeled as passes. Source/build/tooling/documentation requirements remain in scope.
+
 All supported native targets build. Public market/stream, support-crate and documentation checks pass; external integration prerequisites remain unavailable.
 
 ## Verified scope
