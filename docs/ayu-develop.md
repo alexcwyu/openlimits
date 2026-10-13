@@ -1,168 +1,226 @@
-# openlimits: architecture, features and workflows
+# OpenLimits: workflow, design and architecture
 
-Updated: 2026-10-12 · Branch: `feature/ayu_develop` · Source snapshot: `41d02cb`
+Updated: **2026-10-13**
+Reviewed Git hash: `ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5`
+Branch: `feature/ayu_develop`
+Source diff SHA256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+Scope: **Execution adapter toolkit** / Maintenance: **active**
+Languages: Rust
 
-[Development and layout](development.md) · [Validation evidence](validation.md) · [HTML edition](ayu-develop.html)
+[HTML edition](ayu-develop.html) / [Development](development.md) / [Historical validation](validation.md) / [Full system comparison](../../docs/index.html)
 
 ## Purpose and scope
 
-A Rust exchange API abstraction with Binance, Coinbase and Nash implementations and historical C# FFI bindings. OpenLimits is a stateless factory: instantiate<E: Exchange> returns the concrete venue client E. Venue adapters implement common traits and response models; requests are made on the returned client.
+Common asynchronous crypto exchange account/market/stream traits implemented by Binance, Coinbase and Nash adapters; no native strategy/backtest orchestration.
 
-## Features
+## Features and support boundaries
 
-- Common market, balance, order and historical-data models.
-- Venue-specific credentials and environment selection.
-- Streaming interfaces and asynchronous request handling.
-- Optional GMP or num-bigint cryptographic backends.
-- Historical C# interop bindings are separate from the default Rust build.
+Native = implemented here. Integration = supplied through a named host/API. Limited = material restriction. Not provided = evidenced scope exclusion. Unverified = support/absence not established. Not applicable = outside this artifact type.
 
-## Components and responsibilities
+| Capability | Status | Implementation and limits | Source |
+|---|---|---|---|
+| Backtesting | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Live execution | Native | Concrete adapters expose remote market/limit/cancel, balances and order history through shared traits; implementation presence is separate from live-account verification. | [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212)) / [Binance](../crates/openlimits-binance/src/lib.rs) ([L46](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-binance/src/lib.rs#L46)) / [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8)) / [src/exchange/mod.rs](../src/exchange/mod.rs) ([L3](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/exchange/mod.rs#L3)) |
+| Paper trading | Integration | Sandbox chooses an exchange-hosted environment; no in-process paper brokerage was inspected. | [Environment](../crates/openlimits-exchange/src/exchange.rs) ([L13](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/exchange.rs#L13)) / [Coinbase](../crates/openlimits-coinbase/src/lib.rs) ([L67](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L67)) |
+| Event driven | Native | ExchangeStream creates converted event streams and callback consumer tasks. | [ExchangeStream](../crates/openlimits-exchange/src/traits/stream/exchange_stream.rs) ([L17](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/stream/exchange_stream.rs#L17)) |
+| Vectorized | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Order management | Native | Concrete adapters expose remote market/limit/cancel, balances and order history through shared traits; implementation presence is separate from live-account verification. | [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212)) / [Binance](../crates/openlimits-binance/src/lib.rs) ([L46](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-binance/src/lib.rs#L46)) / [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8)) / [src/exchange/mod.rs](../src/exchange/mod.rs) ([L3](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/exchange/mod.rs#L3)) |
+| Order types | Native | Concrete adapters expose remote market/limit/cancel, balances and order history through shared traits; implementation presence is separate from live-account verification. | [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212)) / [Binance](../crates/openlimits-binance/src/lib.rs) ([L46](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-binance/src/lib.rs#L46)) / [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8)) / [src/exchange/mod.rs](../src/exchange/mod.rs) ([L3](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/exchange/mod.rs#L3)) |
+| Multi venue | Native | Concrete adapters expose remote market/limit/cancel, balances and order history through shared traits; implementation presence is separate from live-account verification. | [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212)) / [Binance](../crates/openlimits-binance/src/lib.rs) ([L46](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-binance/src/lib.rs#L46)) / [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8)) / [src/exchange/mod.rs](../src/exchange/mod.rs) ([L3](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/exchange/mod.rs#L3)) |
+| Crypto | Native | Concrete adapters expose remote market/limit/cancel, balances and order history through shared traits; implementation presence is separate from live-account verification. | [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212)) / [Binance](../crates/openlimits-binance/src/lib.rs) ([L46](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-binance/src/lib.rs#L46)) / [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8)) / [src/exchange/mod.rs](../src/exchange/mod.rs) ([L3](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/exchange/mod.rs#L3)) |
+| Equities | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Futures | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Options | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Forex | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Strategy api | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Optimization | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Machine learning | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Reinforcement learning | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Portfolio | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Risk management | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Performance analytics | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Historical data | Limited | Coinbase candle retrieval is implemented, but its historical-trades method is unimplemented; adapter coverage is uneven. | [get_historic_rates](../crates/openlimits-coinbase/src/lib.rs) ([L150](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L150)) |
+| Streaming data | Native | ExchangeStream creates converted event streams and callback consumer tasks. | [ExchangeStream](../crates/openlimits-exchange/src/traits/stream/exchange_stream.rs) ([L17](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/stream/exchange_stream.rs#L17)) |
+| Persistence | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Data pipeline | Limited | Normalizes market/order/stream responses without supplying a historical storage/research pipeline. | [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212)) / [ExchangeStream](../crates/openlimits-exchange/src/traits/stream/exchange_stream.rs) ([L17](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/stream/exchange_stream.rs#L17)) |
+| Web ui | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Cli | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Monitoring | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
+| Extension api | Native | Concrete adapters expose remote market/limit/cancel, balances and order history through shared traits; implementation presence is separate from live-account verification. | [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212)) / [Binance](../crates/openlimits-binance/src/lib.rs) ([L46](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-binance/src/lib.rs#L46)) / [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8)) / [src/exchange/mod.rs](../src/exchange/mod.rs) ([L3](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/exchange/mod.rs#L3)) |
+| Native acceleration | Native | Adapters and trait implementations compile in Rust. | [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8)) / [Coinbase](../crates/openlimits-coinbase/src/lib.rs) ([L67](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L67)) |
+| Distributed execution | Unverified | Not established by the inspected implementation boundaries; no absence or production claim is made. | Not applicable to this repository scope. |
 
-| Component | Responsibility | Implementation |
-| --- | --- | --- |
-| Facade | Creates the selected venue client and exposes the common API | [src/openlimits.rs](../src/openlimits.rs) |
-| Common exchange API | Defines shared models and API surfaces | [crates/openlimits-exchange/src/lib.rs](../crates/openlimits-exchange/src/lib.rs) |
-| Binance adapter | Implements Binance HTTP and stream behavior | [crates/openlimits-binance/src/lib.rs](../crates/openlimits-binance/src/lib.rs) |
-| Coinbase adapter | Implements Coinbase account and market access | [crates/openlimits-coinbase/src/lib.rs](../crates/openlimits-coinbase/src/lib.rs) |
-| Nash adapter | Connects the Nash protocol and client libraries | [crates/openlimits-nash/src/lib.rs](../crates/openlimits-nash/src/lib.rs) |
+## System components
 
-## Architecture and boundaries
+| Component | Responsibility | Source |
+|---|---|---|
+| Typed initialization | Instantiates the chosen generic exchange. | [OpenLimits](../src/openlimits.rs) ([L10](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/openlimits.rs#L10)) / [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8)) |
+| Common API contracts | Shared account, market-info and market-data traits/models. | [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8)) |
+| Coinbase adapter | Maps normalized market/order requests to Coinbase BaseClient. | [Coinbase](../crates/openlimits-coinbase/src/lib.rs) ([L67](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L67)) / [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212)) / [get_historic_rates](../crates/openlimits-coinbase/src/lib.rs) ([L150](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L150)) |
+| Binance adapter | Implements common exchange requests for Binance. | [Binance](../crates/openlimits-binance/src/lib.rs) ([L46](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-binance/src/lib.rs#L46)) |
+| Stream conversion | Converts exchange events and invokes callback/stream consumers. | [ExchangeStream](../crates/openlimits-exchange/src/traits/stream/exchange_stream.rs) ([L17](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/stream/exchange_stream.rs#L17)) |
 
-The following view shows the principal responsibilities and their data-flow relationship. It is a conceptual architecture view; each implementation link above identifies the owning source. Native or external services retain their own lifecycle and configuration.
+## Architecture and component boundaries
+
+The component view summarizes inspected responsibility boundaries. Arrows identify the documented API/data dependencies; this is not a deployment-readiness claim.
 
 ```mermaid
 flowchart LR
-  C0["Facade"]
-  C1["Common exchange API"]
-  C2["Binance adapter"]
-  C3["Coinbase adapter"]
-  C4["Nash adapter"]
-  C0 --> C1
-  C2 -. implements .-> C1
-  C3 -. implements .-> C1
-  C4 -. implements .-> C1
+  N0["Typed initialization"]
+  N1["Common API contracts"]
+  N2["Coinbase adapter"]
+  N3["Binance adapter"]
+  N4["Stream conversion"]
+  N0 -->|"Generic bound enforces Exchange interfaces."| N1
+  N0 -->|"Concrete E::new chooses client transport and refreshes pairs."| N2
+  N0 -->|"Concrete generic adapter implements common interface."| N3
+  N4 -->|"Converts native websocket responses to shared WebSocketResponse."| N1
 ```
 
-### Component ownership
+- Generic bound enforces Exchange interfaces.: [OpenLimits](../src/openlimits.rs) ([L10](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/openlimits.rs#L10)) / [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8))
+- Concrete E::new chooses client transport and refreshes pairs.: [OpenLimits](../src/openlimits.rs) ([L10](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/openlimits.rs#L10)) / [Coinbase](../crates/openlimits-coinbase/src/lib.rs) ([L67](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L67))
+- Concrete generic adapter implements common interface.: [OpenLimits](../src/openlimits.rs) ([L10](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/openlimits.rs#L10)) / [Binance](../crates/openlimits-binance/src/lib.rs) ([L46](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-binance/src/lib.rs#L46))
+- Converts native websocket responses to shared WebSocketResponse.: [ExchangeStream](../crates/openlimits-exchange/src/traits/stream/exchange_stream.rs) ([L17](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/stream/exchange_stream.rs#L17))
 
-The boundaries below distinguish entry points from their state/model and integration responsibilities. Data validation, numerical semantics and external protocol handling belong in the owning modules rather than in documentation or deployment scripts.
+## Design decisions
 
-```mermaid
-flowchart TB
-  Caller["Application or operator"]
-  Caller --> M0["Facade"]
-  Caller --> M1["Common exchange API"]
-  Caller --> M2["Binance adapter"]
-  Caller --> M3["Coinbase adapter"]
-  Caller --> M4["Nash adapter"]
-```
+| Decision | Rationale | Tradeoff | Evidence |
+|---|---|---|---|
+| Expose a composed Exchange trait with exchange-specific clients. | Common requests/results are portable while inner clients retain venue-specific features. | Adapters implement different subsets; common trait membership does not mean identical feature coverage. | [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8)) / [get_historic_rates](../crates/openlimits-coinbase/src/lib.rs) ([L150](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L150)) |
+| Convert stream messages through TryInto and callbacks. | Common consumers can process different native websocket payloads. | Callback consumer ends on stream/socket failures; callers must manage lifecycle/recovery. | [ExchangeStream](../crates/openlimits-exchange/src/traits/stream/exchange_stream.rs) ([L17](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/stream/exchange_stream.rs#L17)) |
 
-## Types and relationships
-
-This diagram names types present in the linked source. Edges describe the documented relationship; they do not imply additional inheritance.
+## Class and interface relationships
 
 ```mermaid
 classDiagram
-  class OpenLimits
-  class Environment
-  class OpenLimitsError
-  OpenLimits --> OpenLimitsError : typed failures
-  OpenLimits --> Environment : venue environment
+  class N0["OpenLimits"] {
+    <<struct>>
+    +instantiate()
+  }
+  class N1["Exchange"] {
+    <<trait>>
+    +new()
+    +inner_client()
+  }
+  class N2["Coinbase"] {
+    <<struct>>
+    +new()
+    +refresh_market_info()
+    +get_pair()
+    +limit_buy()
+    +market_buy()
+    +cancel_order()
+    +get_historic_rates()
+  }
+  class N3["Binance"] {
+    <<struct>>
+    +new()
+    +get_pair()
+    +limit_buy()
+    +market_buy()
+    +cancel_order()
+    +get_account_balances()
+  }
+  class N4["ExchangeStream"] {
+    <<trait>>
+    +new()
+    +disconnect()
+    +create_stream_specific()
+    +subscribe()
+    +create_stream()
+  }
+  N0 ..> N1 : instantiate dispatches E..new.
+  N2 ..> N1 : Coinbase implements the shared Exchange trait.
+  N3 ..> N1 : Binance implements the shared Exchange trait.
 ```
 
-- [`OpenLimits`](../src/openlimits.rs)
-- [`Environment`](../crates/openlimits-exchange/src/exchange.rs)
-- [`OpenLimitsError`](../crates/openlimits-exchange/src/errors.rs)
+Each node is a reviewed source symbol. Function/module nodes are explicitly labeled; they do not imply Python classes. Only reviewed relationships are drawn.
 
-## Runtime workflow
+- **OpenLimits** (struct): [OpenLimits](../src/openlimits.rs) ([L10](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/openlimits.rs#L10))
+- **Exchange** (trait): [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8))
+- **Coinbase** (struct): [Coinbase](../crates/openlimits-coinbase/src/lib.rs) ([L67](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L67)) / [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212)) / [get_historic_rates](../crates/openlimits-coinbase/src/lib.rs) ([L150](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L150))
+- **Binance** (struct): [Binance](../crates/openlimits-binance/src/lib.rs) ([L46](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-binance/src/lib.rs#L46))
+- **ExchangeStream** (trait): [ExchangeStream](../crates/openlimits-exchange/src/traits/stream/exchange_stream.rs) ([L17](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/stream/exchange_stream.rs#L17))
 
-1. Choose venue and environment with appropriate client configuration.
-2. Construct the selected exchange client.
-3. Build a common market or account request.
-4. Let the venue adapter serialize, sign and send the request.
-5. Deserialize the response or propagate OpenLimitsError.
+## Workflow
+
+### Initialize and submit a Coinbase limit buy
+
+The external exchange is reached by BaseClient, not a native fill simulator. Actual order conversion is inspected; credentials or endpoint connectivity were not exercised in this audit.
 
 ```mermaid
 flowchart TD
-  Start(["Start"])
-  W0["Choose venue and environment with appropriate client configuration."]
-  W1["Construct the selected exchange client."]
-  W2["Build a common market or account request."]
-  W3["Let the venue adapter serialize, sign and send the request."]
-  W4["Deserialize the response or propagate OpenLimitsError."]
-  Start --> W0
+  W0["Call OpenLimits::instantiateCoinbase with public/credentialed sandbox/production settings."]
+  W1["Create transport and refresh market metadata."]
   W0 --> W1
+  W2["Caller submits OpenLimitOrderRequest through ExchangeAccount API."]
   W1 --> W2
+  W3["Resolve pair and call BaseClient.limit_buy, convert result to common Order."]
   W2 --> W3
-  W3 --> W4
-  W4 --> Finish(["Result"])
 ```
 
-## Sequence of a typical operation
+1. Call OpenLimits::instantiate<Coinbase> with public/credentialed sandbox/production settings.. [OpenLimits](../src/openlimits.rs) ([L10](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/openlimits.rs#L10)) / [Coinbase](../crates/openlimits-coinbase/src/lib.rs) ([L67](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L67))
+2. Create transport and refresh market metadata.. [Coinbase](../crates/openlimits-coinbase/src/lib.rs) ([L67](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L67))
+3. Caller submits OpenLimitOrderRequest through ExchangeAccount API.. [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8)) / [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212))
+4. Resolve pair and call BaseClient.limit_buy; convert result to common Order.. [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212))
 
-This sequence expands the responsibility flow described above. The named participants correspond to the component table; error handling and any service-specific prerequisites remain part of the implementation.
+## Sequence
+
+Initialize and submit a Coinbase limit buy
+
+The external exchange is reached by BaseClient, not a native fill simulator. Actual order conversion is inspected; credentials or endpoint connectivity were not exercised in this audit.
 
 ```mermaid
 sequenceDiagram
-  actor Operator
-  participant P0 as Facade
-  participant P1 as Common exchange API
-  participant P2 as Binance adapter
-  participant P3 as Coinbase adapter
-  participant P4 as Nash adapter
-  Operator->>P0: instantiate selected Exchange type
-  P0->>P1: Exchange::new(parameters)
-  P1-->>Operator: Concrete exchange client
-  Operator->>Adapter: Request market / account operation
-  Adapter->>Venue: Serialize / sign / send
-  Venue-->>Adapter: Response or protocol error
-  Adapter-->>Operator: Common typed result
+  participant N0 as Coinbase adapter
+  participant N1 as Common API contracts
+  participant N2 as Typed initialization
+  N2->>N0: E::new(parameters).await.
+  N0->>N1: Refresh MarketPair metadata before serving requests.
+  N1->>N0: limit_buy normalizes pair then awaits BaseClient.
 ```
 
-## Development and verification workflow
+- E::new(parameters).await.: [OpenLimits](../src/openlimits.rs) ([L10](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/openlimits.rs#L10)) / [Coinbase](../crates/openlimits-coinbase/src/lib.rs) ([L67](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L67))
+- Refresh MarketPair metadata before serving requests.: [Coinbase](../crates/openlimits-coinbase/src/lib.rs) ([L67](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L67))
+- limit_buy normalizes pair then awaits BaseClient.: [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212))
 
-Sync the upstream refs, merge the actual default branch into `feature/ayu_develop`, resolve conflicts, install the documented environment and run the existing build/test commands. Keep lockfiles and source changes together so another checkout can reproduce the environment.
+## Strengths and limits
 
-```mermaid
-flowchart LR
-  Fetch["Fetch branches and tags"] --> Merge["Merge default into feature branch"]
-  Merge --> Install["Install locked toolchain/dependencies"]
-  Install --> Build["Compile and build"]
-  Build --> Tests["Run existing tests"]
-  Tests --> Docs["Verify docs, diagrams and links"]
-  Docs --> Commit["Commit reviewed changes"]
-```
+### Strengths
 
-### Commands
+- Normalized order requests map explicitly to client calls and typed results. [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212))
 
-```sh
-LIBRARY_PATH=$(brew --prefix gmp)/lib cargo build --all-targets --locked
-LIBRARY_PATH=$(brew --prefix gmp)/lib cargo test --lib --locked
-cargo test --no-run --locked
-```
+### Limitations
 
-The exact commands executed, interpreter/compiler versions, pass/fail counts and any prerequisites are recorded in [validation.md](validation.md). A syntax-only pass is reported separately from a package/native build and from runtime tests.
+- Sandbox is remote integration, and documented credential/TLS failures remain failures despite current exclusion policy. [Environment](../crates/openlimits-exchange/src/exchange.rs) ([L13](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/exchange.rs#L13)) / [docs/validation.md](../docs/validation.md) ([L16](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/docs/validation.md#L10))
+- Huobi is absent from the supported root exports; Coinbase historical trades is unimplemented. [src/exchange/mod.rs](../src/exchange/mod.rs) ([L3](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/exchange/mod.rs#L3)) / [get_historic_rates](../crates/openlimits-coinbase/src/lib.rs) ([L150](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L150))
 
-## Source navigation
+## Validation scope
 
-These links refer to files in this checkout. They remain useful when the repository is opened locally; the source snapshot above identifies the revision used for this guide.
+The linked validation and command records preserve actual historical runs and user-authorized exclusions. This source/document review does not rerun application tests, establish live trading readiness or rank benchmark performance. Current data, credential and runtime prerequisites remain material.
 
-- [src/openlimits.rs](../src/openlimits.rs)
-- [crates/openlimits-exchange/src/lib.rs](../crates/openlimits-exchange/src/lib.rs)
-- [crates/openlimits-binance/src/lib.rs](../crates/openlimits-binance/src/lib.rs)
-- [crates/openlimits-coinbase/src/lib.rs](../crates/openlimits-coinbase/src/lib.rs)
-- [crates/openlimits-nash/src/lib.rs](../crates/openlimits-nash/src/lib.rs)
-- [crates/openlimits-exchange/src/exchange.rs](../crates/openlimits-exchange/src/exchange.rs)
-- [crates/openlimits-exchange/src/errors.rs](../crates/openlimits-exchange/src/errors.rs)
-- [Cargo.toml](../Cargo.toml)
-- [bindings/csharp/AskBid.cs](../bindings/csharp/AskBid.cs)
-- [bindings/csharp/Balance.cs](../bindings/csharp/Balance.cs)
-- [bindings/csharp/BinanceClientConfig.cs](../bindings/csharp/BinanceClientConfig.cs)
-- [bindings/csharp/CString.cs](../bindings/csharp/CString.cs)
-- [bindings/csharp/Candle.cs](../bindings/csharp/Candle.cs)
-- [bindings/csharp/CoinbaseClientConfig.cs](../bindings/csharp/CoinbaseClientConfig.cs)
-- [bindings/csharp/ExchangeClient.cs](../bindings/csharp/ExchangeClient.cs)
+[Repository validation](validation.md) / [Executed checks](maintenance/index.md)
 
-## Current exchange protocol compatibility
+## Source map
 
-[Coinbase product decoding](../crates/openlimits-coinbase/src/model/product.rs) preserves absent historical size limits as `None`. [Coinbase subscriptions](../crates/openlimits-coinbase/src/client/stream.rs) select the public batch feed and retain actual parse/transport errors during acknowledgement. [Channel types](../crates/openlimits-coinbase/src/model/websocket/channel_type.rs) normalize the exchange acknowledgement alias without discarding order-book updates. [Binance filters](../crates/openlimits-binance/src/model/symbol_filter.rs) retain current rule fields as typed metadata. These adaptations follow the current official exchange schemas, linked in the development guide.
+| Reviewed symbol/path | Inspected responsibility | Actual file SHA256 |
+|---|---|---|
+| [OpenLimits](../src/openlimits.rs) ([L10](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/openlimits.rs#L10)) | instantiate calls E::new(parameters).await and returns the concrete Exchange. | `7c1f045de075517b1105e73592be55fcff55592b043f47e5bdce51ee88633af0` |
+| [Exchange](../crates/openlimits-exchange/src/traits/exchange.rs) ([L8](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/exchange.rs#L8)) | Composes ExchangeInfoRetrieval, ExchangeAccount and ExchangeMarketData with async initialization and optional inner client. | `edc866fe089416332390b972d60e8cf5fcbaee56ace27e4ab977a80da2f20c71` |
+| [Coinbase](../crates/openlimits-coinbase/src/lib.rs) ([L67](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L67)) | Owns ExchangeInfo and BaseClient; new selects credentialed or public transport and sandbox flag before refresh_market_info. | `d02e2dcc1423d78bb82b3a5fc5a45921406295cb795a35cafff998f87475cc5b` |
+| [limit_buy](../crates/openlimits-coinbase/src/lib.rs) ([L212](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L212)) | Resolves a normalized MarketPair handle, passes size/price/TIF/post_only to BaseClient and converts response; cancel/market methods call the corresponding client methods. | `d02e2dcc1423d78bb82b3a5fc5a45921406295cb795a35cafff998f87475cc5b` |
+| [get_historic_rates](../crates/openlimits-coinbase/src/lib.rs) ([L150](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-coinbase/src/lib.rs#L150)) | Delegates historical candle requests to the client; get_historic_trades is unimplemented in the inspected adapter. | `d02e2dcc1423d78bb82b3a5fc5a45921406295cb795a35cafff998f87475cc5b` |
+| [Binance](../crates/openlimits-binance/src/lib.rs) ([L46](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-binance/src/lib.rs#L46)) | Concrete Binance adapter implements common market/account interfaces including limit/market requests and balances/orders. | `e7125f385d0ffdb382e8c1d67a0ef85e2b995faab64cb6ab03e5d84071479ad9` |
+| [ExchangeStream](../crates/openlimits-exchange/src/traits/stream/exchange_stream.rs) ([L17](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/traits/stream/exchange_stream.rs#L17)) | create_stream wraps native responses with TryInto; subscribe spawns a consumer task invoking callback and returns bounded CallbackHandle. | `6c81fec88aa09830ffaa1e7e1e97a404eabda4df9fb305755e1df88c89780bb3` |
+| [src/exchange/mod.rs](../src/exchange/mod.rs) ([L3](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/src/exchange/mod.rs#L3)) | Root exports Binance/Coinbase/Nash plus common trait/model/error modules; Huobi is not a supported root export. | `aefcd4e5543e9c4866bb03b047ee3d9aede693090a36c83076e09d1e741112ae` |
+| [Environment](../crates/openlimits-exchange/src/exchange.rs) ([L13](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/crates/openlimits-exchange/src/exchange.rs#L13)) | Production/Sandbox flags select remote environments; Sandbox is not an in-process paper fill engine. | `fd89fba6abce38c8b5c401274ee91ab40342ad71d384f98bccc212df9812550d` |
+| [docs/validation.md](../docs/validation.md) ([L16](https://github.com/alexcwyu/openlimits/blob/ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5/docs/validation.md#L10)) | Current exclusions preserve credential/Nash TLS failures; supported native build and public checks do not prove private account execution. | `a43a0449c34d0387d451eb7b02f9996016388e586287187fb5734d738b2f0cfe` |
+
+## Documentation provenance
+
+Review date: 2026-10-13. Full committed source HEAD: `ef076a6f7e7b9cffbdc1d848a31636c50ac5f6c5`. Template version: 2. 8 source files were independently hashed for this guide.
+
+[Evidence catalog](../../docs/systems-2026-10-13/catalog.json) / [Standard template](../../docs/guidelines/APP_TEMPLATE.md)
+
+- Inspected source paths: src/openlimits.rs, crates/openlimits-exchange/src/traits/exchange.rs, crates/openlimits-coinbase/src/lib.rs, crates/openlimits-binance/src/lib.rs, crates/openlimits-exchange/src/traits/stream/exchange_stream.rs, src/exchange/mod.rs, crates/openlimits-exchange/src/exchange.rs, docs/validation.md
+- Read-only audit against the full HEAD and tracked-diff provenance in inventory.json. Validation documentation is historical executed evidence; exclusions are completion policy, not live venue proof. No dependencies, tests or upstream files were changed.
